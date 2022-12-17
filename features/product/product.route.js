@@ -7,24 +7,24 @@ const productRouter = Router();
 
 productRouter.get("/product", async (req, res) => {
     let categories = req.query.categories;
-    if(categories){
+    if (categories) {
         try {
             // console.log(categories)
-            let items = await Product.find({"categories":categories});
+            let items = await Product.find({ "categories": categories });
             // let items = await Product.find({"title":{ "$regex": categories, "$options": "i" }});
-    
+
             res.status(200).send(items);
         } catch (error) {
             console.log(error)
             res.status(401).send({ "err": "Somthing went wrong" })
         }
-    }else{
+    } else {
         let items = await Product.find();
         // let items = await Product.find({"title":{ "$regex": categories, "$options": "i" }});
 
         res.status(200).send(items);
     }
-   
+
 });
 
 productRouter.get("/product/search", async (req, res) => {
@@ -32,7 +32,7 @@ productRouter.get("/product/search", async (req, res) => {
     try {
         console.log(q)
         // let items = await Product.find({"categories":categories});
-        let items = await Product.find({"title":{ "$regex": q, "$options": "i" }});
+        let items = await Product.find({ "title": { "$regex": q, "$options": "i" } });
 
         res.status(200).send(items);
     } catch (error) {
@@ -56,8 +56,8 @@ productRouter.get("/product/:productId", async (req, res) => {
 
 productRouter.post("/product", async (req, res) => {
     const payload = req.body;
-    const { _id } = req.body;
-    const existing = await Product.findById({ _id: _id });
+    const { title } = req.body;
+    const existing = await Product.findOne({ title });
     if (existing) {
         res.status(401).send({ message: "Product allredy persent in cart" })
     } else {
